@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15
+    container_name: sistema_universitario_db
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: password123
+      POSTGRES_DB: universidad
+    ports:
+      - "5439:5432"
+    volumes:
+      # Mapeamos tus archivos SQL para que se ejecuten solos al iniciar
+      - ./schema.sql:/docker-entrypoint-initdb.d/1_schema.sql
+      - ./data.sql:/docker-entrypoint-initdb.d/2_data.sql
