@@ -1,7 +1,7 @@
 # Proyecto Integrador: Sistema de Gestión Universitaria
 
-**Materia:** Bases de Datos  
-**Estudiante:** Adrián  
+**Materia:** Bases de Datos
+**Estudiante:** Adrián
 
 ## Descripción del Dominio
 Este proyecto implementa una base de datos relacional para gestionar la información académica de una universidad. El sistema administra:
@@ -21,64 +21,63 @@ El esquema cumple con los requisitos de normalización y claves foráneas para a
 4. **CURSO**: `id_curso` (PK), `id_prof` (FK), `id_aula` (FK)
 5. **INSCRIPCION**: `id_inscripcion` (PK), `id_est` (FK), `id_curso` (FK)
 
-## Instrucciones de Instalación
+## Instrucciones de Instalación y Ejecución
 
-1. Clonar este repositorio.
-2. Ejecutar el script `schema.sql` en su cliente de PostgreSQL para crear las tablas.
+Este proyecto está contenerizado con **Docker** para un despliegue automático y portable.
 
-3. Ejecutar el script `data.sql` para poblar la base de datos con información de prueba.
+1. **Clonar el repositorio:**
+   Descargue los archivos de este repositorio en su máquina local.
+
+2. **Levantar la Base de Datos:**
+   Ejecute el siguiente comando en la terminal para crear el contenedor, las tablas y cargar los datos automáticamente:
+   ```bash
+   docker-compose up -d
+
+3. **Ejecutar el Sistema: Inicie el menú interactivo para realizar consultas:**
+   ```bash
+   python menu.py
 
 ## Catálogo de Consultas y Expresiones en Álgebra Relacional
 
 A continuación se detalla la especificación formal (Álgebra Relacional) de las 20 consultas incluidas en el sistema:
 
 ### 1. BÁSICAS
-1. **Estudiante con ID 5:** σ id_est = 5 (ESTUDIANTE)
-2. **Aulas fuera del edificio A:** σ edificio ≠ 'A' (AULA)
-3. **Notas superiores a 90:** σ nota > 90 (INSCRIPCION)
-4. **Cursos de 8 créditos del Prof. 30:** σ creditos = 8 ∧ id_prof = 30 (CURSO)
-5. **Estudiantes de Sistemas o Arquitectura:** σ carrera = 'Sistemas' ∨ carrera = 'Arquitectura' (ESTUDIANTE)
-6. **Proyección de Nombres:** π nombre, apellido (ESTUDIANTE)
-7. **Cálculo de Salario Anual:** π nombre, salario, salario * 12 (PROFESOR)
+- **Estudiante con ID 5:** σ id_est = 5 (ESTUDIANTE)
+- **Aulas fuera del edificio A:** σ edificio ≠ 'A' (AULA)
+- **Notas superiores a 90:** σ nota > 90 (INSCRIPCION)
+- **Cursos de 8 créditos del Prof. 30:** σ creditos = 8 ∧ id_prof = 30 (CURSO)
+- **Estudiantes de Sistemas o Arquitectura:** σ carrera = 'Sistemas' ∨ carrera = 'Arquitectura' (ESTUDIANTE)
+- **Proyección de Nombres:** π nombre, apellido (ESTUDIANTE)
+- **Cálculo de Salario Anual:** π nombre, salario, salario * 12 (PROFESOR)
 
 ### 2. REUNIONES (JOINS)
-8. **Historial de Estudiantes:** π nombre, semestre, nota (ESTUDIANTE ⋈ INSCRIPCION)
-9. **Detalle Completo (3 tablas):** π nombre, nombre_curso, nota (ESTUDIANTE ⋈ INSCRIPCION ⋈ CURSO)
-10. **Ubicación de Cursos:** π nombre_curso, edificio, numero (CURSO ⋈ AULA)
-11. **Profesores y sus Cursos (Incluye sin carga):** PROFESOR ⟕ CURSO (Left Outer Join)
+- **Historial de Estudiantes:** π nombre, semestre, nota (ESTUDIANTE ⋈ INSCRIPCION)
+- **Detalle Completo (3 tablas):** π nombre, nombre_curso, nota (ESTUDIANTE ⋈ INSCRIPCION ⋈ CURSO)
+- **Ubicación de Cursos:** π nombre_curso, edificio, numero (CURSO ⋈ AULA)
+- **Profesores y sus Cursos (Incluye sin carga):** PROFESOR ⟕ CURSO (Left Outer Join)
 
 ### 3. AGREGACIÓN
-12. **Total de estudiantes:** ℑ COUNT(id_est) (ESTUDIANTE)
-13. **Promedio general:** ℑ AVG(nota) (INSCRIPCION)
-14. **Nota máxima:** ℑ MAX(nota) (INSCRIPCION)
-15. **Estudiantes por carrera:** γ carrera; COUNT(*) (ESTUDIANTE)
-16. **Nómina por departamento:** γ departamento; SUM(salario) (PROFESOR)
+- **Total de estudiantes:** ℑ COUNT(id_est) (ESTUDIANTE)
+- **Promedio general:** ℑ AVG(nota) (INSCRIPCION)
+- **Nota máxima:** ℑ MAX(nota) (INSCRIPCION)
+- **Estudiantes por carrera:** γ carrera; COUNT(*) (ESTUDIANTE)
+- **Nómina por departamento:** γ departamento; SUM(salario) (PROFESOR)
 
 ### 4. AVANZADAS
-17. **Unión de Personas (Estudiantes + Profesores):** π nombre (ESTUDIANTE) ∪ π nombre (PROFESOR)
-18. **Estudiantes sin inscripciones (Resta):** ESTUDIANTE - (π datos_est (ESTUDIANTE ⋈ INSCRIPCION))
-19. **Mejores promedios (Agrupación + Orden):** τ promedio ↓ ( γ nombre; AVG(nota) (ESTUDIANTE ⋈ INSCRIPCION) )
-20. **Aulas grandes (Subconsulta):** σ capacidad > (ℑ AVG(capacidad)(AULA)) (AULA)
+- **Unión de Personas (Estudiantes + Profesores):** π nombre (ESTUDIANTE) ∪ π nombre (PROFESOR)
+- **Estudiantes sin inscripciones (Resta):** ESTUDIANTE - (π datos_est (ESTUDIANTE ⋈ INSCRIPCION))
+- **Mejores promedios (Agrupación + Orden):** τ promedio ↓ ( γ nombre; AVG(nota) (ESTUDIANTE ⋈ INSCRIPCION) )
+- **Aulas grandes (Subconsulta):** σ capacidad > (ℑ AVG(capacidad)(AULA)) (AULA)
 
-## Diagrama EER y Modelo Relacional
+## Modelos de Base de Datos
 
-A continuación se presenta la estructura lógica y relacional de la base de datos implementada.
+### 1. Diagrama Entidad-Relación Extendido (EER)
+Representación conceptual del dominio:
 
-### Modelo Relacional (Esquema Textual)
+![Diagrama EER](diagrama_eer.png)
 
-Este esquema describe las tablas normalizadas y sus vínculos:
-
-* **ESTUDIANTE** (<ins>id_est</ins>, nombre, apellido, edad, email, carrera)
-* **PROFESOR** (<ins>id_prof</ins>, nombre, departamento, salario)
-* **AULA** (<ins>id_aula</ins>, edificio, numero, capacidad)
-* **CURSO** (<ins>id_curso</ins>, nombre_curso, creditos, *id_prof*, *id_aula*)
-    * FK: *id_prof* refiere a PROFESOR(id_prof)
-    * FK: *id_aula* refiere a AULA(id_aula)
-* **INSCRIPCION** (<ins>id_inscripcion</ins>, *id_est*, *id_curso*, semestre, nota)
-    * FK: *id_est* refiere a ESTUDIANTE(id_est)
-    * FK: *id_curso* refiere a CURSO(id_curso)
-
-### Diagrama Entidad-Relación Extendido (Renderizado Automático)
+### 2. Modelo Relacional (Esquema Lógico)
+Representación de la implementación en tablas:
 
 ```mermaid
 erDiagram
