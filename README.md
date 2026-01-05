@@ -59,3 +59,60 @@ A continuación se detalla la especificación formal (Álgebra Relacional) de la
 18. **Estudiantes sin inscripciones (Resta):** ESTUDIANTE - (π datos_est (ESTUDIANTE ⋈ INSCRIPCION))
 19. **Mejores promedios (Agrupación + Orden):** τ promedio ↓ ( γ nombre; AVG(nota) (ESTUDIANTE ⋈ INSCRIPCION) )
 20. **Aulas grandes (Subconsulta):** σ capacidad > (ℑ AVG(capacidad)(AULA)) (AULA)
+
+## Diagrama EER y Modelo Relacional
+
+A continuación se presenta la estructura lógica y relacional de la base de datos implementada.
+
+### Modelo Relacional (Esquema Textual)
+
+Este esquema describe las tablas normalizadas y sus vínculos:
+
+* **ESTUDIANTE** (<ins>id_est</ins>, nombre, apellido, edad, email, carrera)
+* **PROFESOR** (<ins>id_prof</ins>, nombre, departamento, salario)
+* **AULA** (<ins>id_aula</ins>, edificio, numero, capacidad)
+* **CURSO** (<ins>id_curso</ins>, nombre_curso, creditos, *id_prof*, *id_aula*)
+    * FK: *id_prof* refiere a PROFESOR(id_prof)
+    * FK: *id_aula* refiere a AULA(id_aula)
+* **INSCRIPCION** (<ins>id_inscripcion</ins>, *id_est*, *id_curso*, semestre, nota)
+    * FK: *id_est* refiere a ESTUDIANTE(id_est)
+    * FK: *id_curso* refiere a CURSO(id_curso)
+
+### Diagrama Entidad-Relación Extendido (Renderizado Automático)
+
+```mermaid
+erDiagram
+    ESTUDIANTE ||--o{ INSCRIPCION : "realiza"
+    CURSO ||--o{ INSCRIPCION : "tiene"
+    PROFESOR ||--o{ CURSO : "imparte"
+    AULA ||--o{ CURSO : "alberga"
+
+    ESTUDIANTE {
+        int id_est PK
+        string nombre
+        string apellido
+        string email
+    }
+    PROFESOR {
+        int id_prof PK
+        string nombre
+        string departamento
+    }
+    CURSO {
+        int id_curso PK
+        string nombre_curso
+        int creditos
+        int id_prof FK
+        int id_aula FK
+    }
+    AULA {
+        int id_aula PK
+        string edificio
+        int numero
+    }
+    INSCRIPCION {
+        int id_inscripcion PK
+        int id_est FK
+        int id_curso FK
+        float nota
+    }
